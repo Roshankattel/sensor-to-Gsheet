@@ -1,0 +1,14 @@
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents); // Parse incoming JSON
+
+  // Append new data to the Google Sheet
+  if (data.method === "append") {
+    sheet.appendRow([data.mac,new Date(),data.timestamp, data.temperature, data.humidity]);
+  } else if (data.method === "replace") {
+    sheet.clear(); // Clear the sheet and replace the data
+    sheet.appendRow(["MAC", "Sheet Time","ESP32 Time", "Temperature", "Humidity"]);
+    sheet.appendRow([data.mac, new Date(),data.timestamp, data.temperature, data.humidity]);
+  }
+  return ContentService.createTextOutput("Data received successfully");
+}
